@@ -77,8 +77,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'go_hire',
-        'USER': 'nagarjunprasad',
-        'PASSWORD': 'passwd',
+        'USER': 'deepakgupta',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
         # 'TEST_MIRROR': 'default',
