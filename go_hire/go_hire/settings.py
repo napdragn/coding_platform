@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'question.apps.QuestionConfig',
     'user.apps.UserConfig',
     'interview.apps.InterviewConfig',
+    'judge.apps.JudgeConfig'
 ]
 
 MIDDLEWARE = [
