@@ -6,7 +6,7 @@ class Contest(base_models.DateTimeModel):
     title = models.CharField(db_index=True, max_length=100)
 
     def __str__(self):
-        return f"{self.contest_id}: {self.title}"
+        return f"{self.id}: {self.title}"
 
 
 class ContestQuestionMapping(base_models.DateTimeModel):
@@ -23,4 +23,4 @@ class UserContest(base_models.DateTimeModel):
     contest_duration = models.PositiveIntegerField(default=2)
     user_start_time = models.DateTimeField(null=True, blank=True)
     user_end_time = models.DateTimeField(null=True, blank=True)
-    result = models.CharField(null=True, max_length=40)
+    result = models.CharField(default="not_started", null=True, max_length=40)
