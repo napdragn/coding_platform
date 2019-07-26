@@ -6,7 +6,7 @@ ideone_config = {
         "endpoint":{
             "compilers":"/api/v4/compilers",
             "compile":"/api/v4/submissions",
-            "result":"/api/v4/submissions/",
+            "submission_result":"/api/v4/submissions/",
         },
         "access-token":"31415fd1f52cbc2dd8ea8dadb722a14e",
     },
