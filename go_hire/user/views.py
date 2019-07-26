@@ -85,8 +85,6 @@ def register(request):
 
 
 def user_login(request):
-    import pdb;
-    pdb.set_trace()
     if request.method == 'POST':
         data = json.loads(request.body)
         username = data.get('username')
