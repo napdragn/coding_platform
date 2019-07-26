@@ -1,9 +1,12 @@
 import datetime
 import json
 
+from django.utils import timezone
+
 from contests.models import Contest, ContestQuestionMapping, UserContest
-from contests.serializer import BeginContestSerializer, GetContestsSerializer
+from contests.serializer import BeginContestSerializer, GetContestsSerializer, SubmitContestSerializer
 from question.models import Answer, Question, QuestionTagMapping, Tag
+from judge.models import UserSubMissionTable
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -139,3 +142,38 @@ class BeginContestApi(APIView):
 
 #     def get(self, request, **kwargs):
 #         pass
+
+class SubmitContestApi(APIView):
+    serializer_class = SubmitContestSerializer
+
+    def post(self, request, **kwargs):
+        if not request.user.is_authenticated:
+            resp_dict = {
+                "success": False,
+                "error_message": "User not authenticated, Please Login."
+            }
+            return Response(resp_dict, status=status.HTTP_200_OK)
+        post_data = json.loads(request.data)
+        answers_list = post_data.get('answer_list')
+        contest_id = post_data.get('contest_id')
+        for answer_list in answers_list:
+            ans = Answer.objects.filter(question_id=answer_list.get('question_id')).first().expected_output
+            result = '100' if ans == answer_list.get('answer') else '0'
+            UserSubMissionTable.objects.create(
+                user_id=request.user.id,
+                contest_id=contest_id,
+                ques_id=answer_list.get('question_id'),
+                source_code='',
+                result=result,
+                response=answer_list.get('answer'),
+            )
+        UserContest.objects.filter(
+            email=request.user.email,
+            contest_id=contest_id,
+        ).update(user_end_time=timezone.now())
+
+        resp_dict = {
+            "success": True,
+            "message": "Contest successfully done."
+        }
+        return Response(resp_dict, status=status.HTTP_200_OK)
