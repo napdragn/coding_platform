@@ -1,11 +1,12 @@
-from contests.models import Contest, UserContest
-from contests.serializer import GetContestsSerializer, GetContestQuestionsSerializer
+import json
+
+from contests.models import Contest, ContestQuestionMapping, UserContest
+from contests.serializer import BeginContestSerializer, GetContestsSerializer
+from question.models import Answer, Question, QuestionTagMapping, Tag
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-import json
 
 
 class GetContestsApi(APIView):
@@ -40,8 +41,8 @@ class GetContestsApi(APIView):
         return Response(resp_dict, status=status.HTTP_200_OK)
 
 
-class GetContestQuestionsApi(APIView):
-    serializer_class = GetContestQuestionsSerializer
+class BeginContestApi(APIView):
+    serializer_class = BeginContestSerializer
 
     def post(self, request, **kwargs):
         if not request.user.is_authenticated:
@@ -70,9 +71,20 @@ class GetContestQuestionsApi(APIView):
                 "error_message": "Unable to find any untaken contests."
             }
             return Response(resp_dict, status=status.HTTP_200_OK)
-        contest_question_id_list = list()
+        contest_question_id_list = ContestQuestionMapping.objects.filter(
+            contest_id=contest_id
+        ).values_list('question_id', flat=True)
+        question_details = Question.objects.filter(
+            id__in=contest_question_id_list
+        ).values('id', 'type', 'description', 'title')
+        for q in question_details:
+            if q.get('type') == 'mcq':
+                q['options'] = Answer.objects.filter(question_id=q.get('id')).first().expected_input.split(',')
+        resp_dict = {
+            "success": True,
+            "questions_list": q
+        }
         return Response(resp_dict, status=status.HTTP_200_OK)
 
     def get(self, request, **kwargs):
         pass
-

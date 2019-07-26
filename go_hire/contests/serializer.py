@@ -5,5 +5,5 @@ class GetContestsSerializer(serializers.Serializer):
     pass
 
 
-class GetContestQuestionsSerializer(serializers.Serializer):
+class BeginContestSerializer(serializers.Serializer):
     contest_id = serializers.CharField()
