@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^special/', views.special, name='special'),
     url(r'^user/', include('user.urls')),
     url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^judge/', include('judge.urls'))
+    url(r'^judge/', include('judge.urls')),
+    url(r'^hiring/', include('interview.urls')),
 ]
 
