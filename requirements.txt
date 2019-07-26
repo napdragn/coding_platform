@@ -3,3 +3,5 @@ djangorestframework==3.10.1
 mysqlclient==1.4.2.post1
 pytz==2019.1
 sqlparse==0.3.0
+django-cors-headers==2.4.0
+requests
