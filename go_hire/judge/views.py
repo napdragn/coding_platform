@@ -6,7 +6,7 @@ import requests
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from judge.models import UserSubMissionTable
-from question.models import Answer
+from question.models import Answer, Question
 # Create your views here.
 
 @csrf_exempt
@@ -115,19 +115,27 @@ def get_submission_result(request):
                 if compile_info_resp.status_code in (200, 201):
                     compile_info_resp = str(compile_info_resp.content)
                     resp['output_info_resp'] = compile_info_resp
-                    update_user_submission(submission_id, '', compile_info_resp)
+                    update_user_submission(submission_id, '0', compile_info_resp)
             elif compile_code == 15:
                 output_info_uri = result.get("streams", {}).get("output", {}).get("uri", '')
                 output_info_resp = requests.get(output_info_uri)
                 if output_info_resp.status_code in (200, 201):
                     output_info_resp = str(output_info_resp.content)
                     output_from_file = Answer.objects.filter(question_id = ques_id)
-                    if output_from_file and str(output_from_file[0].expected_output) == output_info_resp:
+                    if output_from_file:
+                        output_data_unescaped = str(output_from_file[0].expected_output).decode('string_escape')
+                        if output_data_unescaped  == output_info_resp:
+                            resp['output_info_resp'] = output_info_resp
+                            resp['result']="100"
+                            resp['status'] = 'success'
+                            update_user_submission(submission_id, "100", output_info_resp)
+                    else:
                         resp['output_info_resp'] = output_info_resp
-                        update_user_submission(submission_id, '', output_info_resp)
+                        resp['result'] = "0"
+                        update_user_submission(submission_id, '0', output_info_resp)
             else:
-                update_user_submission(submission_id, 'success', '')
-                resp['status'] = 'success'
+                update_user_submission(submission_id, '0', '')
+                resp['status'] = 'failed'
         return JsonResponse(resp)
 
 
@@ -142,10 +150,31 @@ def save_user_submission(data, id):
     obj.save()
 
 def update_user_submission(submission_id, result, response):
-    obj = UserSubMissionTable.object.filter(submission_id)
-    obj.result = result
-    obj.response = response
-    obj.save()
+    obj = UserSubMissionTable.objects.filter(submission_id = submission_id).first()
+    if obj:
+        obj.result = result
+        obj.response = response
+        obj.save()
+
+
+
+def get_user_results(request):
+    user_id = request.GET.dict().get('user_id')
+    resp = {
+        'status':"failed"
+    }
+    if user_id is None:
+        return JsonResponse(resp)
+    user_data = UserSubMissionTable.objects.filter(user_id = user_id).order_by('-id')
+    resp['data']={}
+    for data in user_data:
+        ques_text  = Question.objects.filter(ques_id = data.ques_id).first().question_text
+        if data.contest_id in resp['data']:
+            resp['data'][data.contest_id].append({'question_text': ques_text, 'result': data.result})
+        else:
+            resp['data'][data.contest_id] = [{'question_text': ques_text, 'result': data.result}]
+    return JsonResponse(resp)
+
 
 
 
