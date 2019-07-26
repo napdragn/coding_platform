@@ -143,4 +143,5 @@ LOGIN_URL = '/user/user_login/'
 ALLOWED_HOSTS = ['0b2bae39.ngrok.io', '127.0.0.1']
 
 
+
 CORS_ORIGIN_ALLOW_ALL = True
