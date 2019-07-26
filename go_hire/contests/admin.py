@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Contest, ContestQuestionMapping, UserContest
 
-# Register your models here.
+
+admin.site.register(Contest)
+admin.site.register(UserContest)
+admin.site.register(ContestQuestionMapping)
