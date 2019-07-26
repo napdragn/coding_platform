@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'go_hire.middleware.OptionMiddleware',
+    # 'go_hire.middleware.OptionMiddleware',
 ]
 
 ROOT_URLCONF = 'go_hire.urls'
