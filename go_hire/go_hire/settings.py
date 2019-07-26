@@ -35,16 +35,17 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
-    'util.apps.UtilConfig',
-    'contests.apps.ContestsConfig',
-    'question.apps.QuestionConfig',
-    'user.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'util.apps.UtilConfig',
+    'contests.apps.ContestsConfig',
+    'question.apps.QuestionConfig',
+    'user.apps.UserConfig',
+    'interview.apps.InterviewConfig',
 ]
 
 MIDDLEWARE = [
