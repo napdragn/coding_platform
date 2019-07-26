@@ -5,6 +5,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import json
+
 
 class GetContestsApi(APIView):
     serializer_class = GetContestsSerializer
@@ -48,7 +50,7 @@ class GetContestQuestionsApi(APIView):
                 "error_message": "User not authenticated, Please Login."
             }
             return Response(resp_dict, status=status.HTTP_200_OK)
-        post_data = request.data
+        post_data = json.loads(request.data)
         email = request.user.username
         contest_id = post_data.get('contest_id', '')
         if not contest_id:
