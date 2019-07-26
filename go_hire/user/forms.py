@@ -16,4 +16,4 @@ class UserProfileInfoForm(forms.ModelForm):
 
     class Meta():
         model = UserProfileInfo
-        fields = ('portfolio_site',)
+        fields = ('portfolio_site', 'ctc', 'current_company', 'resume', 'name')
