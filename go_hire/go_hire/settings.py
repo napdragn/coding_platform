@@ -34,6 +34,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'util.apps.UtilConfig',
+    'contests.apps.ContestsConfig',
+    'question.apps.QuestionConfig',
     'user.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',

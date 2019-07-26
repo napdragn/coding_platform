@@ -25,6 +25,7 @@ from django.conf.urls import url, include
 from user import views
 
 urlpatterns = [
+    path('contests/', include('contests.urls')),
     path('admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
     url(r'^special/', views.special, name='special'),
