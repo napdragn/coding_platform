@@ -140,7 +140,7 @@ STATICFILES_DIRS = [STATIC_DIR, ]
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
 LOGIN_URL = '/user/user_login/'
-ALLOWED_HOSTS = ['f495e2b2.ngrok.io']
+ALLOWED_HOSTS = ['0b2bae39.ngrok.io', '127.0.0.1']
 
 
 CORS_ORIGIN_ALLOW_ALL = True
