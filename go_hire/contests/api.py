@@ -52,14 +52,16 @@ class BeginContestApi(APIView):
     serializer_class = BeginContestSerializer
 
     def post(self, request, **kwargs):
-        if not request.user.is_authenticated:
-            resp_dict = {
-                "success": False,
-                "error_message": "User not authenticated, Please Login."
-            }
-            return Response(resp_dict, status=status.HTTP_200_OK)
+        # if not request.user.is_authenticated:
+        #     resp_dict = {
+        #         "success": False,
+        #         "error_message": "User not authenticated, Please Login."
+        #     }
+        #     return Response(resp_dict, status=status.HTTP_200_OK)
         post_data = json.loads(request.data)
-        email = request.user.username
+        user_id = post_data.get('user_id')
+        userx = User.objects.get(id=user_id)
+        email = userx.username
         contest_id = post_data.get('contest_id', '')
         if not contest_id:
             resp_dict = {
@@ -106,7 +108,9 @@ class GetQuestionDetailsApi(APIView):
 
     def get(self, request, **kwargs):
         get_data = request.GET.dict()
-        email = request.user.username
+        user_id = get_data.get('user_id')
+        userx = User.objects.get(id=user_id)
+        email = userx.username
         question_id = get_data.get('question_id', '')
         contest_id = get_data.get('contest_id', '')
         if not question_id:
@@ -160,20 +164,22 @@ class SubmitContestApi(APIView):
         pass
 
     def post(self, request, **kwargs):
-        if not request.user.is_authenticated:
-            resp_dict = {
-                "success": False,
-                "error_message": "User not authenticated, Please Login."
-            }
-            return Response(resp_dict, status=status.HTTP_200_OK)
+        # if not request.user.is_authenticated:
+        #     resp_dict = {
+        #         "success": False,
+        #         "error_message": "User not authenticated, Please Login."
+        #     }
+        #     return Response(resp_dict, status=status.HTTP_200_OK)
         post_data = json.loads(request.data)
+        user_id = post_data.get('user_id')
+        userx = User.objects.get(id=user_id)
         answers_list = post_data.get('answer_list')
         contest_id = post_data.get('contest_id')
         for answer_list in answers_list:
             ans = Answer.objects.filter(question_id=answer_list.get('question_id')).first().expected_output
             result = '100' if ans == answer_list.get('answer') else '0'
             UserSubMissionTable.objects.create(
-                user_id=request.user.id,
+                user_id=userx.id,
                 contest_id=contest_id,
                 ques_id=answer_list.get('question_id'),
                 source_code='',
@@ -181,7 +187,7 @@ class SubmitContestApi(APIView):
                 response=answer_list.get('answer'),
             )
         UserContest.objects.filter(
-            email=request.user.email,
+            email=userx.email,
             contest_id=contest_id,
         ).update(user_end_time=timezone.now())
 
