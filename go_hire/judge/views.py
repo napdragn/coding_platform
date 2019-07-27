@@ -71,15 +71,22 @@ def compile(request):
                     'status':'success',
                     'message':'successfully compiled'
                 }
-                if type != 'compile':
+                if type in ('compile', 'submit'):
                     resp['message'] = 'successfully submitted'
                     resp['id'] = ideone_resp['id']
-                    save_user_submission(data, ideone_resp.get("id", ''))
+                    if type == 'submit':
+                        save_user_submission(data, ideone_resp.get("id", ''))
                     data = {
                         'id':resp['id'],
                         'question_id':ques_id
                     }
-                    get_submission_result(request, data)
+                    result = get_submission_result(request, data)
+                    if result:
+                        resp = {
+                            'status':result.get('status', ''),
+                            'output_info_resp':result.get('output_info_resp',''),
+                            'message': result.get('compile_info_name','')
+                        }
             return JsonResponse(resp)
     return JsonResponse(resp)
 
