@@ -13,7 +13,6 @@ import json
 
 
 def index(request):
-    request.session.set_test_cookie()
     return render(request, 'user/index.html')
 
 
@@ -44,8 +43,6 @@ def profile_save(request):
 
 
 def register(request):
-    print(">>>> TEST COOKIE Worked!!")
-    request.session.delete_test_cookie()
     registered = False
     error_message = ''
     if request.method == 'POST':
