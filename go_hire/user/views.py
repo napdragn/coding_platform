@@ -59,7 +59,7 @@ def register(request):
 
         else:
             print(user_form.errors)
-    data = {'registered': registered, 'error_message': error_message, 'is_staff': 1}
+    data = {'registered': registered, 'error_message': error_message, 'is_staff': 1, 'user_id': user.id}
     return JsonResponse(data)
 
     #     profile_form = UserProfileInfoForm(data=request.POST)
@@ -93,7 +93,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return JsonResponse({'status': True, 'error': ''})
+                return JsonResponse({'user_id': user.id, 'status': True, 'error': ''})
             else:
                 return JsonResponse({'status': True, 'error': 'Your account was inactive'})
         else:

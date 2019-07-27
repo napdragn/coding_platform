@@ -12,6 +12,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.contrib.auth.models import User
 
 class GetContestsApi(APIView):
     serializer_class = GetContestsSerializer
@@ -20,13 +21,15 @@ class GetContestsApi(APIView):
         pass
 
     def get(self, request, **kwargs):
-        if not request.user.is_authenticated:
-            resp_dict = {
-                "success": False,
-                "error_message": "User not authenticated, Please Login."
-            }
-            return Response(resp_dict, status=status.HTTP_200_OK)
-        email = request.user.username
+        user_id = request.GET.get('user_id')
+        userx = User.objects.get(id=user_id)
+        # if not userx.is_authenticated:
+        #     resp_dict = {
+        #         "success": False,
+        #         "error_message": "User not authenticated, Please Login."
+        #     }
+        #     return Response(resp_dict, status=status.HTTP_200_OK)
+        email = userx.username
         user_contest_list = UserContest.objects.filter(
             email=email,
             user_start_time__isnull=True

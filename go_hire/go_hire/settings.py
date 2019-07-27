@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'judge.apps.JudgeConfig'
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -63,7 +64,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'go_hire.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
