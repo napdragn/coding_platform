@@ -34,7 +34,7 @@ def compile(request):
         language = data.get('language', '')
         ques_id = data.get('ques_id', '')
         contest_id = data.get('contest_id', '')
-        user_id = str(request.user.id)
+        user_id = data.get('user_id', '')
         time_limit = data.get('time_limit', '')
         custom_input = data.get('custom_input', '')
         type = data.get('type','')

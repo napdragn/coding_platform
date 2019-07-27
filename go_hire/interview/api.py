@@ -15,10 +15,10 @@ class InterviewApi(APIView):
 
     def post(self, request, **kwargs):
         data = json.loads(request.body)
-
+        user_id = data.get('user_id')
         interview = Interview.objects.create(
             user_id=data.get('user_id'),
-            creator_id=request.user.id,
+            creator_id=user_id,
             position=request.get('position'),
         )
         return Response({'interview_id': interview.id}, status=status.HTTP_201_CREATED)
