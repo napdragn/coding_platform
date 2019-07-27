@@ -31,8 +31,8 @@ def compile(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         source_code = data.get('source_code','')
-        language = data.get('language', '')
-        ques_id = data.get('ques_id', '')
+        language = data.get('language', '') or 'Python'
+        ques_id = data.get('question_id', '')
         contest_id = data.get('contest_id', '')
         user_id = data.get('user_id', '')
         time_limit = data.get('time_limit', '')
@@ -143,7 +143,7 @@ def save_user_submission(data, id):
     obj = UserSubMissionTable(
         user_id = data.get('user_id',''),
         source_code = data.get('source_code', ''),
-        ques_id =  data.get('ques_id', ''),
+        ques_id =  data.get('question_id', ''),
         submission_id = id,
         contest_id  = data.get('contest_id', ''),
     )
