@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^judge/', include('judge.urls')),
     url(r'^hiring/', include('interview.urls')),
+    url(r'^util/', include('util.urls')),
 ]
 

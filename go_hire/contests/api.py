@@ -32,7 +32,7 @@ class GetContestsApi(APIView):
         email = userx.username
         user_contest_list = UserContest.objects.filter(
             email=email,
-            user_start_time__isnull=True
+            user_end_time__isnull=True
         ).values_list('contest_id', flat=True)
         contest_title_mapping = list()
         for contest_id in user_contest_list:
@@ -58,7 +58,8 @@ class BeginContestApi(APIView):
         #         "error_message": "User not authenticated, Please Login."
         #     }
         #     return Response(resp_dict, status=status.HTTP_200_OK)
-        post_data = json.loads(request.data)
+
+        post_data = request.data
         user_id = post_data.get('user_id')
         userx = User.objects.get(id=user_id)
         email = userx.username
@@ -72,7 +73,7 @@ class BeginContestApi(APIView):
         user_contest_obj = UserContest.objects.filter(
             contest_id=contest_id,
             email=email,
-            user_start_time__isnull=True
+            user_end_time__isnull=True
         ).first()
         if not user_contest_obj:
             resp_dict = {
@@ -134,12 +135,12 @@ class GetQuestionDetailsApi(APIView):
         contest_question_id_list = ContestQuestionMapping.objects.filter(
             contest_id=contest_id
         ).values_list('question_id', flat=True)
-        if question_id not in contest_question_id_list:
-            resp_dict = {
-                "success": False,
-                "error_message": "Not authorized to view this question."
-            }
-            return Response(resp_dict, status=status.HTTP_200_OK)
+        # if question_id not in contest_question_id_list:
+        #     resp_dict = {
+        #         "success": False,
+        #         "error_message": "Not authorized to view this question."
+        #     }
+        #     return Response(resp_dict, status=status.HTTP_200_OK)
 
         question_obj = Question.objects.filter(
             id=question_id
@@ -171,7 +172,7 @@ class SubmitContestApi(APIView):
         #         "error_message": "User not authenticated, Please Login."
         #     }
         #     return Response(resp_dict, status=status.HTTP_200_OK)
-        post_data = json.loads(request.data)
+        post_data = request.data
         user_id = post_data.get('user_id')
         userx = User.objects.get(id=user_id)
         answers_list = post_data.get('answer_list')
