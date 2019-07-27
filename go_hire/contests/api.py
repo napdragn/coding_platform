@@ -73,7 +73,7 @@ class BeginContestApi(APIView):
             contest_id=contest_id,
             email=email,
             user_start_time__isnull=True
-        )
+        ).first()
         if not user_contest_obj:
             resp_dict = {
                 "success": False,
@@ -81,6 +81,7 @@ class BeginContestApi(APIView):
             }
             return Response(resp_dict, status=status.HTTP_200_OK)
         user_contest_obj.user_start_time = datetime.datetime.now()
+        user_contest_obj.save()
         contest_question_id_list = ContestQuestionMapping.objects.filter(
             contest_id=contest_id
         ).values_list('question_id', flat=True)
