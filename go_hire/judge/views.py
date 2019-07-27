@@ -75,6 +75,11 @@ def compile(request):
                     resp['message'] = 'successfully submitted'
                     resp['id'] = ideone_resp['id']
                     save_user_submission(data, ideone_resp.get("id", ''))
+                    data = {
+                        'id':resp['id'],
+                        'question_id':ques_id
+                    }
+                    get_submission_result(request, data)
             return JsonResponse(resp)
     return JsonResponse(resp)
 
@@ -83,7 +88,7 @@ def validate_compile_data(source_code, ques_id, contest_id, language, user_id):
         return False
     return True
 
-def get_submission_result(request):
+def get_submission_result(request, data={}):
     # get_params : id, ques_id
 
     submission_id = request.GET.dict().get('id','')
@@ -91,6 +96,10 @@ def get_submission_result(request):
     resp = {
         'status': 'failed'
     }
+    if submission_id == '':
+        submission_id = data.get('id', '')
+    if ques_id == '':
+        ques_id = data.get('question_id', '')
     if submission_id is None:
         return  JsonResponse(resp)
     else:
@@ -155,6 +164,7 @@ def update_user_submission(submission_id, result, response):
         obj.result = result
         obj.response = response
         obj.save()
+
 
 
 
